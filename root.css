@@ -1,0 +1,68 @@
+/* common */
+body {
+  margin: 0;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+h2,
+h3 {
+  text-align: center;
+}
+
+/* index */
+#signinWrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(6, 6, 196, 0.5);
+  transition: background-color 1s;
+  z-index: 5;
+}
+
+#signinWrapper > div {
+  position: absolute;
+}
+
+#signin,
+#signout {
+  display: none;
+}
+
+#signin {
+  top: calc(50% - 99px);
+  left: calc(50% - 165px);
+  text-align: center;
+  border-radius: 4px;
+  border: 3px outset #f0f0f0;
+  padding: 8px;
+  background-color: #f0f0f0;
+}
+
+#signinButton {
+  display: inline-block;
+}
+
+#signout {
+  top: calc(50% - 32px);
+  left: calc(50% - 32px);
+  transition: left 1s, top 1s;
+}
+
+#userIcon {
+  width: 64px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .25);
+  transition: width 1s;
+}
+
+#userIcon:hover {
+  box-shadow: 0 0 3px 3px rgba(66, 133, 244, .3);
+}
+
+/* terms, privacy */
+body#legal {
+  margin: 8px;
+  font-family: Roboto, Arial, sans-serif;
+}

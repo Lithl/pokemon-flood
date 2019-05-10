@@ -1,0 +1,19 @@
+<!doctype html>
+<title>Scribe</title>
+<link rel="stylesheet" href="./root.css">
+<meta name="google-signin-client_id" content="99953346844-92b1h6oj228oo0d6qe7ei5ihfb4tc35r.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script type="module" src="flood.lib.js"></script>
+<script type="module" src="flood.js"></script>
+<div id="signinWrapper">
+  <div id="signin">
+    <h2>Welcome to Pokemon Flood!</h2>
+    <h3>Please sign in to play</h3>
+    <div id="signinButton" title="Sign in using Google"></div>
+  </div>
+<div id="signout" title="Sign out">
+    <a href="#"><img id="userIcon"></a>
+  </div>
+</div>
+<script src="signin.js"></script>
+<flood-app id="mainApp"></flood-app>
