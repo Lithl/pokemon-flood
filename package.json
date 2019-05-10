@@ -1,0 +1,17 @@
+{
+  "name": "pokemon-flood",
+  "version": "1.0.0",
+  "description": "Browser-based Pokemon game taking place in the prehistory of licensed Pokeon games",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pokemon",
+    "game",
+    "fan creation"
+  ],
+  "author": "Lithl (blanketyblankman@gmail.com)",
+  "license": "MIT"
+}
