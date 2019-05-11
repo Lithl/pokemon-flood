@@ -2,6 +2,7 @@
 body {
   margin: 0;
   font-family: Roboto, Arial, sans-serif;
+  height: 100vh;
 }
 
 h2,
@@ -18,7 +19,6 @@ h3 {
   left: 0;
   background-color: rgba(6, 6, 196, 0.5);
   transition: background-color 1s;
-  z-index: 5;
 }
 
 #signinWrapper > div {

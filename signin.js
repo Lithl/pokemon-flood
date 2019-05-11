@@ -15,7 +15,10 @@
         userIcon.style.width = '32px';
 
         wrapper.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-        wrapper.style.zIndex = '0';
+        setTimeout(() => {
+          wrapper.style.left = 'calc(100% - 48px)';
+          wrapper.style.bottom = 'calc(100% - 48px)';
+        }, 1000);
       }, 1000);
     } else {
       signin.style.display = 'block';
