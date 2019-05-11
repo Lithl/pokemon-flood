@@ -1,21 +1,8 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { customElement, /*listen,*/ observe, property, /*, query*/ } from '@polymer/decorators';
-// import {DeclarativeEventListeners} from '@polymer/decorators/lib/declarative-event-listeners';
-// import {DomRepeat} from '@polymer/polymer/lib/elements/dom-repeat';
+import { customElement, observe, property /*, query*/ } from '@polymer/decorators';
 
-// import {PaperTree, TreeNode, RootIconType, RootNodeData, ParentNodeData, LeafNodeData} from '../paper-tree';
-// import {MenuBar} from '../menu-bar';
-// import {RichEditorCollection} from '../rich-editor-collection';
-// import '../resizable-panel';
-
+import '../keyboard-handler';
 import * as template from './template.html';
-// import {fileMenu, editMenu, insertMenu, formatMenu, helpMenu} from './menu-config';
-// import {
-  // fileMenu_openRecent as openRecent,
-  // fileMenu_exportTo_googleDrive as googleDrive
-// } from './menu-config/file-menu';
-// import {generateProject} from './sidebar-config';
-// import {nth} from '../../util';
 
 import '../../common.scss?name=common';
 import './index.scss?name=main';
@@ -27,7 +14,7 @@ import './index.scss?name=main';
  * being in a shadow root well)
  */
 @customElement('flood-app')
-export class FloodApp extends /*DeclarativeEventListeners(*/PolymerElement/*)*/ {
+export class FloodApp extends PolymerElement {
   static get template() {
     // @ts-ignore
     return html([template]);
@@ -40,7 +27,6 @@ export class FloodApp extends /*DeclarativeEventListeners(*/PolymerElement/*)*/ 
     super.ready();
   }
 
-  // @listen('report-bug', document)
   // reportBug() {
   //   open(
   //       'https://github.com/Lithl/flood-app/issues/new?labels=bug,triage&assignee=lithl',
@@ -52,7 +38,7 @@ export class FloodApp extends /*DeclarativeEventListeners(*/PolymerElement/*)*/ 
    * Drive export menu item
    */
   @observe('googleUser')
-  protected googleUserChanged(user: gapi.auth2.GoogleUser) {
+  protected googleUserChanged_(user: gapi.auth2.GoogleUser) {
     if (user) {
       setTimeout(() => {
         this.style.display = 'block';
@@ -60,5 +46,9 @@ export class FloodApp extends /*DeclarativeEventListeners(*/PolymerElement/*)*/ 
     } else {
       this.style.display = 'none';
     }
+  }
+
+  protected handleKeyPressed_(e: CustomEvent) {
+    console.log(e);
   }
 }
