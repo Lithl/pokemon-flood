@@ -19,6 +19,7 @@ h3 {
   left: 0;
   background-color: rgba(6, 6, 196, 0.5);
   transition: background-color 1s;
+  z-index: 5;
 }
 
 #signinWrapper > div {
