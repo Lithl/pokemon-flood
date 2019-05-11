@@ -11,7 +11,9 @@
   },
   "watch": {
     "build": {
-      "patterns": ["src"],
+      "patterns": [
+        "src"
+      ],
       "extensions": "ts,scss,html",
       "quiet": true
     }
@@ -26,6 +28,8 @@
   "dependencies": {
     "@polymer/decorators": "^3.0.0",
     "@polymer/iron-a11y-keys": "^3.0.1",
+    "@polymer/paper-item": "^3.0.1",
+    "@polymer/paper-listbox": "^3.0.1",
     "@polymer/polymer": "^3.2.0",
     "@types/gapi.auth2": "0.0.50",
     "express": "^4.16.4"
