@@ -12,6 +12,7 @@ paper-listbox {
   margin: 33vh auto 0 auto;
   padding: 8px 0 8px 0;
   background-color: transparent;
+  display: block;
 
   paper-item {
     margin: 8px;
@@ -23,10 +24,6 @@ paper-listbox {
     cursor: pointer;
 
     --paper-item-selected-weight: normal;
-
-    --paper-item-focused {
-      background-color: #33f;
-    }
 
     &:nth-last-of-type(2) {
       height: 150px;
