@@ -1,0 +1,66 @@
+<style include="common"></style>
+<style include="options"></style>
+
+<paper-listbox
+    id="menuOptions"
+    attr-for-selected="value"
+    selected="textSpeed"
+    on-iron-activate="optionItemSelected_">
+  <paper-item value="textSpeed">
+    <span>Text speed</span>
+    <paper-listbox attr-for-selected="value" selected="normal">
+      <paper-item value="slow"><span>Slow</span></paper-item>
+      <paper-item value="normal"><span>Normal</span></paper-item>
+      <paper-item value="fast"><span>Fast</span></paper-item>
+    </paper-listbox>
+  </paper-item>
+  <paper-item value="battleEffects">
+    <span>Battle effects</span>
+    <paper-listbox attr-for-selected="value" selected="on">
+      <paper-item value="on"><span>On</span></paper-item>
+      <paper-item value="off"><span>Off</span></paper-item>
+    </paper-listbox>
+  </paper-item>
+  <paper-item value="battleStyle">
+    <span>Battle style</span>
+    <paper-listbox attr-for-selected="value" selected="switch">
+      <paper-item value="switch"><span>Switch</span></paper-item>
+      <paper-item value="set"><span>Set</span></paper-item>
+    </paper-listbox>
+  </paper-item>
+  <paper-item value="music">
+    <span>Music volume</span>
+    <paper-listbox attr-for-selected="value" selected="3">
+      <paper-item value="0"><span>0</span></paper-item>
+      <paper-item value="1"><span>1</span></paper-item>
+      <paper-item value="2"><span>2</span></paper-item>
+      <paper-item value="3"><span>3</span></paper-item>
+      <paper-item value="4"><span>4</span></paper-item>
+      <paper-item value="5"><span>5</span></paper-item>
+    </paper-listbox>
+  </paper-item>
+  <paper-item value="sfx">
+    <span>Effect volume</span>
+    <paper-listbox attr-for-selected="value" selected="3">
+      <paper-item value="0"><span>0</span></paper-item>
+      <paper-item value="1"><span>1</span></paper-item>
+      <paper-item value="2"><span>2</span></paper-item>
+      <paper-item value="3"><span>3</span></paper-item>
+      <paper-item value="4"><span>4</span></paper-item>
+      <paper-item value="5"><span>5</span></paper-item>
+    </paper-listbox>
+  </paper-item>
+  <paper-item value="cries">
+    <span>Pokemon cries</span>
+    <paper-listbox attr-for-selected="value" selected="3">
+      <paper-item value="0"><span>0</span></paper-item>
+      <paper-item value="1"><span>1</span></paper-item>
+      <paper-item value="2"><span>2</span></paper-item>
+      <paper-item value="3"><span>3</span></paper-item>
+      <paper-item value="4"><span>4</span></paper-item>
+      <paper-item value="5"><span>5</span></paper-item>
+    </paper-listbox>
+  </paper-item>
+  <paper-item value="keybindings"><span>Edit keybindings</span></paper-item>
+  <paper-item value="confirm"><span>Confirm</span></paper-item>
+</paper-listbox>
