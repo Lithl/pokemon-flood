@@ -1,39 +1,13 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element';
 import { customElement } from '@polymer/decorators';
 
-export enum Action {
-  CONFIRM = 'confirm',
-  UP = 'up',
-  RIGHT = 'right',
-  DOWN = 'down',
-  LEFT = 'left',
-  MENU = 'menu',
-  SELECT = 'select',
-  CANCEL = 'cancel',
-}
+import { Optional } from '../../util';
+import { Action, Service } from '../../options';
 
-const defaultKeymap: {[code: string]: Action} = {
-  Space: Action.CONFIRM,
-  Enter: Action.CONFIRM,
-  KeyW: Action.UP,
-  KeyD: Action.RIGHT,
-  KeyS: Action.DOWN,
-  KeyA: Action.LEFT,
-  ArrowUp: Action.UP,
-  ArrowRight: Action.RIGHT,
-  ArrowDown: Action.DOWN,
-  ArrowLeft: Action.LEFT,
-  Backspace: Action.MENU,
-  Backquote: Action.MENU,
-  ShiftLeft: Action.SELECT,
-  ShiftRight: Action.SELECT,
-  Escape: Action.CANCEL,
-};
-
+const options = Service.getKeybindOptions();
 
 @customElement('keyboard-handler')
 export class KeyboardHandler extends PolymerElement {
-  private keyboardMap_ = new Map<Action, [string, string]>();
   private keysDown_ = new Set<string>();
 
   /**
@@ -54,30 +28,35 @@ export class KeyboardHandler extends PolymerElement {
     super.ready();
 
     document.body.addEventListener('keydown', (kbd: KeyboardEvent) => {
-      this.keyboardMap_.forEach((value, key) => {
-        if (value.indexOf(kbd.code) >= 0 && !this.keysDown_.has(kbd.code)) {
+      options.getOptionNames().forEach((name) => {
+        const value = options.getOption(name);
+        if (!value) return;
+        if ((value as string[]).indexOf(kbd.code) >= 0
+            && !this.keysDown_.has(kbd.code)) {
           this.keysDown_.add(kbd.code);
           this.dispatchEvent(new CustomEvent('key-down', {
             bubbles: true,
             composed: true,
             detail: {
               down: true,
-              action: key,
+              action: name,
             },
           }));
         }
       });
     });
     document.body.addEventListener('keyup', (kbd: KeyboardEvent) => {
-      this.keyboardMap_.forEach((value, key) => {
-        if (value.indexOf(kbd.code) >= 0) {
+      options.getOptionNames().forEach((name) => {
+        const value = options.getOption(name);
+        if (!value) return;
+        if ((value as string[]).indexOf(kbd.code) >= 0) {
           this.keysDown_.delete(kbd.code);
           this.dispatchEvent(new CustomEvent('key-up', {
             bubbles: true,
             composed: true,
             detail: {
               down: false,
-              action: key,
+              action: name,
             },
           }));
         }
@@ -93,23 +72,43 @@ export class KeyboardHandler extends PolymerElement {
    * @param code2 the second key to map to the action
    */
   setKeyMapping(action: Action, code1: string, code2: string) {
-    this.keyboardMap_.set(action, [code1, code2]);
+    options.setOption(action, [code1, code2]);
+  }
+
+  /**
+   * Get the keys mapped to the given action
+   * @param action the action to get keys for
+   * @returns a string array of length 2 with the key codes bound to the given
+   * action
+   */
+  getKeyMappingForAction(action: Action) {
+    return options.getOption(action) as string[];
+  }
+
+  /**
+   * Get an action for a given key code
+   * @param code the key code to search for
+   * @returns the action associated with the key code, or undefined if there is
+   * no associated action
+   */
+  getActionForKey(code: string) {
+    let foundAction: Optional<Action>;
+    const actions = options.getOptionNames();
+    actions.forEach((name) => {
+      if (foundAction) return;
+      const value = options.getOption(name);
+      if (!value) return;
+      if ((value as string[]).indexOf(code) >= 0) {
+        foundAction = name as Action;
+      }
+    });
+    return foundAction;
   }
 
   /**
    * Resets keymapping to default values
    */
   resetKeymap() {
-    const actionCodeMap = Object.keys(defaultKeymap).reduce((obj, key) => {
-      if (obj[defaultKeymap[key]]) {
-        obj[defaultKeymap[key]][1] = key;
-      } else {
-        obj[defaultKeymap[key]] = [key, ''];
-      }
-      return obj;
-    }, {} as {[key: string]: [string, string]});
-    for (const action in actionCodeMap) {
-      this.keyboardMap_.set(action as Action, actionCodeMap[action]);
-    }
+    options.resetDefaults();
   }
 }
