@@ -5,7 +5,6 @@ import { DeclarativeEventListeners } from '@polymer/decorators/lib/declarative-e
 import '../keyboard-handler';
 import { TitleMenu } from '../title-menu';
 import { OptionsMenu } from '../options-menu';
-import { Action } from '../keyboard-handler';
 import * as template from './template.html';
 import * as Util from '../../util';
 
@@ -95,11 +94,8 @@ export class FloodApp extends DeclarativeEventListeners(PolymerElement) {
 
   protected handleKeyPressed_(e: CustomEvent) {
     if (!e.detail.down && this.gameState_ === State.OPTIONS_MENU) {
-      if (e.detail.action === Action.LEFT || e.detail.action === Action.RIGHT) {
-        this.optionsMenu_.handleKeyPressed(e.detail.action);
-      }
+      this.optionsMenu_.handleKeyPressed(e.detail.action);
     }
-    console.log(e);
   }
 
   protected menuItemSelected_(e: CustomEvent) {
