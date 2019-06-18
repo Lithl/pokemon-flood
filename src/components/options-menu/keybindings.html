@@ -1,0 +1,18 @@
+<style include="common"></style>
+<style include="options"></style>
+
+<paper-listbox
+    id="menuOptions"
+    attr-for-selected="value"
+    selected="[[actions_.0.value]]">
+  <template is="dom-repeat" items="[[actions_]]">
+    <paper-item value="[[item.value]]">
+      <span>[[item.name]]</span>
+      <paper-listbox attr-for-selected="value" on-iron-activate="editBindingDirect_">
+        <paper-item value="key1"><span>[[bindingText_(item.value, item.binding1, 0)]]</span></paper-item>
+        <paper-item value="key2"><span>[[bindingText_(item.value, item.binding2, 1)]]</span></paper-item>
+      </paper-listbox>
+    </paper-item>
+  </template>
+  <paper-item value="confirm" class="confirm"><span>Confirm</span></paper-item>
+</paper-listbox>
