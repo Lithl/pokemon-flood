@@ -82,13 +82,31 @@ class Options {
   }
 }
 
+class Properties {
+  private properties_ = new Map<string, OptionTypes>();
+
+  setProperty(name: string, value: OptionTypes) {
+    this.properties_.set(name, value);
+  }
+
+  getProperty(name: string) {
+    return this.properties_.get(name);
+  }
+
+  deleteProperty(name: string) {
+    this.properties_.delete(name);
+  }
+}
+
 export class Service {
   private keybindOptions_: Options;
   private gameOptions_: Options;
+  private gameProperties_: Properties;
 
   private static instance_ = new Service();
 
   private constructor() {
+    this.gameProperties_ = new Properties();
     this.keybindOptions_ = new Options([
       {
         name: Action.CONFIRM,
@@ -177,5 +195,9 @@ export class Service {
 
   static getGameOptions() {
     return this.instance_.gameOptions_;
+  }
+
+  static getGameProperties() {
+    return this.instance_.gameProperties_;
   }
 }
