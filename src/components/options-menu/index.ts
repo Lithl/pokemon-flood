@@ -24,7 +24,7 @@ interface OptionsModel {
 export class OptionsMenu extends PolymerElement {
   @property() returnState: State = State.TITLE_MENU;
   @query('#menuOptions') private menuOptions_!: PaperListboxElement;
-  @query('#keybindings') private keybindings_!: KeybindingsMenu;
+  @query('#keybindings') keybindings_!: KeybindingsMenu;
   @property() private options_: OptionsModel[] = [];
 
   static get template() {
