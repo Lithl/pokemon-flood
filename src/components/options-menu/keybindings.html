@@ -1,6 +1,12 @@
 <style include="common"></style>
 <style include="options"></style>
 
+<iron-ajax
+    id="saveKeybindings"
+    method="post"
+    url="[[keybindingsEndpoint_]]"
+    content-type="application/json"
+    on-error="handleSaveError_"></iron-ajax>
 <paper-listbox
     id="menuOptions"
     attr-for-selected="value"

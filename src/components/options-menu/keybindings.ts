@@ -1,7 +1,9 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { customElement, query } from '@polymer/decorators';
+import { customElement, query, property } from '@polymer/decorators';
 import { PaperListboxElement } from '@polymer/paper-listbox/paper-listbox';
+import { IronAjaxElement } from '@polymer/iron-ajax/iron-ajax';
 import '@polymer/paper-item/paper-item';
+import '@polymer/iron-ajax/iron-ajax';
 
 import { Action, Service } from '../../options';
 import * as template from './keybindings.html';
@@ -17,11 +19,14 @@ interface ActionBinding {
 }
 
 const options = Service.getKeybindOptions();
+const properties = Service.getGameProperties();
 
 @customElement('keybindings-menu')
 export class KeybindingsMenu extends PolymerElement {
   @query('#menuOptions') private menuOptions_!: PaperListboxElement;
-  private actions_: ActionBinding[] = [];
+  @query('#saveKeybindings') private saveKeybindings_!: IronAjaxElement;
+  @property() private actions_: ActionBinding[] = [];
+  @property() protected keybindingsEndpoint_ = '';
   private editAction_?: Action;
   private isShowing_ = false;
 
@@ -33,17 +38,7 @@ export class KeybindingsMenu extends PolymerElement {
   ready() {
     super.ready();
 
-    options.getOptionNames().forEach((name) => {
-      const opt = options.getOptionData(name);
-      if (!opt) return;
-      const [binding1, binding2] = opt.current as string[];
-      this.actions_.push({
-        value: name as Action,
-        name: opt.label,
-        binding1: binding1 || String.fromCharCode(160),
-        binding2: binding2 || String.fromCharCode(160),
-      });
-    });
+    this.computeActions();
 
     this.addEventListener('keyup', (kbd) => {
       kbd.preventDefault();
@@ -75,6 +70,28 @@ export class KeybindingsMenu extends PolymerElement {
         this.close_();
       }
     });
+
+    this.computeBindings();
+  }
+
+  computeActions() {
+    this.actions_ = [];
+    options.getOptionNames().forEach((name) => {
+      const opt = options.getOptionData(name);
+      if (!opt) return;
+      const [binding1, binding2] = opt.current as string[];
+      this.actions_.push({
+        value: name as Action,
+        name: opt.label,
+        binding1: binding1 || String.fromCharCode(160),
+        binding2: binding2 || String.fromCharCode(160),
+      });
+    });
+  }
+
+  computeBindings() {
+    this.keybindingsEndpoint_ =
+        `/user/${properties.getProperty('userId')}/keys`;
   }
 
   grabFocus() {
@@ -119,10 +136,19 @@ export class KeybindingsMenu extends PolymerElement {
               action.value as string,
               [action.binding1, action.binding2]);
         });
+        this.saveBindings();
 
         this.close_();
         break;
     }
+  }
+
+  saveBindings() {
+    this.saveKeybindings_.body = this.actions_.reduce((body, value) => {
+      body[value.value] = [value.binding1, value.binding2];
+      return body;
+    }, {} as {[key: string]: [string, string]});
+    this.saveKeybindings_.generateRequest();
   }
 
   private close_() {
@@ -165,7 +191,7 @@ export class KeybindingsMenu extends PolymerElement {
   }
 
   protected bindingText_(value: string, binding: string, idx: number) {
-    const opt = options.getOption(value) as string[]
+    const opt = options.getOption(value) as string[];
     const changed = opt[idx] !== binding;
     if (changed && opt[idx] !== '') {
       return `${opt[idx]} \u{21d2} ${binding}`;
@@ -218,5 +244,9 @@ export class KeybindingsMenu extends PolymerElement {
     };
 
     document.body.addEventListener('keyup', cb ? nextKeyup : newBinding);
+  }
+
+  protected handleSaveError_(e: CustomEvent) {
+    console.error('Error saving keybindings', e.detail);
   }
 }
