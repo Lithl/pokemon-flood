@@ -1,10 +1,12 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import { customElement, listen, observe, property, query } from '@polymer/decorators';
 import { DeclarativeEventListeners } from '@polymer/decorators/lib/declarative-event-listeners';
+import { IronAjaxElement } from '@polymer/iron-ajax/iron-ajax';
 
 import '../keyboard-handler';
 import { TitleMenu } from '../title-menu';
 import { OptionsMenu } from '../options-menu';
+import { Service } from '../../options';
 import * as template from './template.html';
 import * as Util from '../../util';
 
@@ -19,6 +21,9 @@ export enum State {
   OPTIONS_MENU = 'options',
 }
 
+const properties = Service.getGameProperties();
+const keybindings = Service.getKeybindOptions();
+
 /**
  * Main app; much of the state will be stored here, and the only element of the
  * page the user interactis with that isn't a child of this component should be
@@ -28,6 +33,7 @@ export enum State {
 @customElement('flood-app')
 export class FloodApp extends DeclarativeEventListeners(PolymerElement) {
   @property() googleUser!: gapi.auth2.GoogleUser;
+  @query('#keybindings') protected keybindingAjax_!: IronAjaxElement;
 
   @property({
     type: String,
@@ -61,8 +67,25 @@ export class FloodApp extends DeclarativeEventListeners(PolymerElement) {
   protected googleUserChanged_(user: gapi.auth2.GoogleUser) {
     if (user) {
       this.gameState_ = State.TITLE_MENU;
+      properties.setProperty('userId', user.getId());
+      this.keybindingAjax_.url = `/user/${user.getId()}/keys`;
+      this.keybindingAjax_.generateRequest();
     } else {
       this.gameState_ = State.SIGNIN;
+      properties.deleteProperty('userId');
+    }
+    this.optionsMenu_.keybindings_.computeBindings();
+  }
+
+  protected handleKeybindingResponse_(e: CustomEvent) {
+    const bindings = e.detail.response;
+    if (Object.keys(bindings).length === 0) {
+      this.optionsMenu_.keybindings_.saveBindings();
+    } else {
+      Object.keys(bindings).forEach((key) => {
+        keybindings.setOption(key, bindings[key]);
+      });
+      this.optionsMenu_.keybindings_.computeActions();
     }
   }
 

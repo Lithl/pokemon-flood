@@ -1,6 +1,11 @@
 <style include="common"></style>
 <style include="main"></style>
 
+<iron-ajax
+    id="keybindings"
+    handle-as="json"
+    content-type="application/json"
+    on-response="handleKeybindingResponse_"></iron-ajax>
 <keyboard-handler on-key-down="handleKeyPressed_" on-key-up="handleKeyPressed_"></keyboard-handler>
 <title-menu id="titleMenu" on-iron-activate="menuItemSelected_"></title-menu>
 <options-menu id="optionsMenu"></options-menu>
