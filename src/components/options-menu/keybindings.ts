@@ -100,11 +100,13 @@ export class KeybindingsMenu extends PolymerElement {
 
   show() {
     this.style.opacity = '1';
+    this.style.zIndex = '2';
     this.isShowing_ = true;
   }
 
   hide() {
     this.style.opacity = '0';
+    this.style.zIndex = '-1';
     this.isShowing_ = false;
   }
 
