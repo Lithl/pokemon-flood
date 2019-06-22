@@ -5,3 +5,5 @@ export function assertUnreachable(_: never): never {
 export type Optional<T> = T | undefined;
 
 export type Nullable<T> = T | null;
+
+export type Constructor<T> = new (...args: any[]) => T;
