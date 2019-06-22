@@ -34,13 +34,13 @@ for (const key in whitelist) {
 app.use(bodyParser.json());
 app.post('/user/:id/keys', (req, res) => {
   const valuesPlaceholder = Object.keys(req.body).map(() =>
-      '(?, ?, ?, ?)').join(',');
+    '(?, ?, ?, ?)').join(',');
   const values = Object.keys(req.body).reduce((arr, action) => {
     arr.push(
-      req.params.id,
-      action,
-      req.body[action][0].trim() || null,
-      req.body[action][1].trim() || null);
+        req.params.id,
+        action,
+        req.body[action][0].trim() || null,
+        req.body[action][1].trim() || null);
     return arr;
   }, []);
   pool.query(`replace into keybindings (id, action, binding1, binding2)
@@ -56,17 +56,17 @@ app.post('/user/:id/keys', (req, res) => {
 app.get('/user/:id/keys', (req, res) => {
   pool.query('select action, binding1, binding2 from keybindings where id = ?',
       req.params.id, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.sendStatus(500);
-      return;
-    }
-    const body = results.reduce((obj, row) => {
-      obj[row.action] = [row.binding1 || '', row.binding2 || ''];
-      return obj;
-    }, {});
-    res.status(200).send(body);
-  });
+        if (err) {
+          console.error(err);
+          res.sendStatus(500);
+          return;
+        }
+        const body = results.reduce((obj, row) => {
+          obj[row.action] = [row.binding1 || '', row.binding2 || ''];
+          return obj;
+        }, {});
+        res.status(200).send(body);
+      });
 });
 
 app.listen(3001, () => console.log('Server running on port 3001'));

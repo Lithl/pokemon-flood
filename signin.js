@@ -1,4 +1,9 @@
 (() => {
+  /**
+   * Set the signed in/out state for the usrer
+   * @param {boolean} isSignedIn whether the user is signed in
+   * @param {string} imgUrl url to the user's avatar icon
+   */
   function setSigninState(isSignedIn, imgUrl) {
     const signin = document.getElementById('signin');
     const signout = document.getElementById('signout');
@@ -30,6 +35,10 @@
     }
   }
 
+  /**
+   * Called when the OAuth initialization is complete
+   * @param {GoogleAuth} auth the authentication object
+   */
   function onInit(auth) {
     let imgUrl;
     if (auth.isSignedIn.get()) {
@@ -39,23 +48,37 @@
     userChanged(auth.currentUser.get());
     auth.currentUser.listen(userChanged);
 
-    const signout = document.getElementById('signout')
+    const signout = document.getElementById('signout');
     const anchor = signout.children[0];
     anchor.addEventListener('click', signOut);
   }
 
+  /**
+   * Called when the Google API fails to initialize
+   * @param {string} error the error that caused the failure
+   */
   function onInitError(error) {
-    alert(`Error initializing Google Authentication library: ${error.error}. Google signin will not be possible.`);
+    alert(`Error initializing Google Authentication library: ${error.error}.
+    Google signin will not be possible.`);
   }
 
+  /**
+   * Called when the sign in process fails
+   * @param {string} error the error that caused the failure
+   */
   function onSigninFailure(error) {
     if (error.error === 'popup_closed_by_user') {
       // user intended to cancel; no error
       return;
     }
-    alert(`Error signing in: ${error.error}. Cannot play without verifying user identity.`);
+    alert(`Error signing in: ${error.error}.
+    Cannot play without verifying user identity.`);
   }
 
+  /**
+   * Called when the currently signed-in user changes
+   * @param {GoogleUser?} user the signed-in user
+   */
   function userChanged(user) {
     let imgUrl;
     if (user.isSignedIn()) {
@@ -67,13 +90,20 @@
     setSigninState(user.isSignedIn(), imgUrl);
   }
 
+  /**
+   * Signs a user out after confirming that's what they want to do
+   */
   function signOut() {
-    const result = confirm('Are you certain you want to sign out? Your unsaved progress will be lost.');
+    const result = confirm(`Are you certain you want to sign out?
+    Your unsaved progress will be lost.`);
     if (result) {
       gapi.auth2.getAuthInstance().signOut();
     }
   }
 
+  /**
+   * Renders the signin button with the Google API
+   */
   function renderButton() {
     gapi.signin2.render('signinButton', {
       scope: 'profile email',
@@ -85,8 +115,10 @@
     });
 
     gapi.load('auth2', () => {
-      gapi.auth2.init({client_id: '99953346844-92b1h6oj228oo0d6qe7ei5ihfb4tc35r.apps.googleusercontent.com'})
-        .then(onInit, onInitError);
+      gapi.auth2.init({
+        client_id: '99953346844-92b1h6oj228oo0d6qe7ei5ihfb4tc35r' +
+            '.apps.googleusercontent.com',
+      }).then(onInit, onInitError);
     });
   }
 
