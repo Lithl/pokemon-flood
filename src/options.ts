@@ -1,3 +1,7 @@
+import { Reactor } from './reactor';
+
+const reactor = Reactor.instance;
+
 export enum Action {
   CONFIRM = 'CONFIRM',
   UP = 'UP',
@@ -13,7 +17,7 @@ type OptionTypes = string | string[] | number | boolean;
 
 interface OptionsMap {
   name: string;
-  label: string,
+  label: string;
   possibleValues?: OptionTypes[];
   value?: OptionTypes;
 }
@@ -31,35 +35,6 @@ class Options {
   constructor(options: OptionsMap[]) {
     this.defaults_ = options;
     this.resetDefaults();
-  }
-
-  private setOptions_(map: OptionsMap) {
-    if (map.possibleValues && map.possibleValues.length < 2) {
-      throw new TypeError('possibleValues must contain at least two values');
-    }
-    if (!map.value && !map.possibleValues) {
-      throw new TypeError('if possibleValues is undefined, value must be defined');
-    }
-
-    this.options_.set(map.name, {
-      current: map.value ? map.value : map.possibleValues![0],
-      possible: map.possibleValues,
-      label: map.label,
-    });
-  }
-
-  setOption(name: string, value: OptionTypes) {
-    const opt = this.options_.get(name);
-    if (!opt) {
-      throw new TypeError(`${name} is not a valid option name`);
-    }
-
-    if (opt.possible && opt.possible.indexOf(value) < 0) {
-      throw new TypeError('invalid option value');
-    }
-
-    opt.current = value;
-    this.options_.set(name, opt);
   }
 
   getOption(name: string) {
@@ -80,23 +55,75 @@ class Options {
       this.setOptions_(op);
     });
   }
+
+  setOption(name: string, value: OptionTypes) {
+    const opt = this.options_.get(name);
+    if (!opt) {
+      throw new TypeError(`${name} is not a valid option name`);
+    }
+
+    if (opt.possible && opt.possible.indexOf(value) < 0) {
+      throw new TypeError('invalid option value');
+    }
+
+    opt.current = value;
+    this.options_.set(name, opt);
+  }
+
+  private setOptions_(map: OptionsMap) {
+    if (map.possibleValues && map.possibleValues.length < 2) {
+      throw new TypeError('possibleValues must contain at least two values');
+    }
+    if (!map.value && !map.possibleValues) {
+      throw new TypeError('if possibleValues is undefined, value must be defined');
+    }
+
+    this.options_.set(map.name, {
+      current: map.value ? map.value : map.possibleValues![0],
+      possible: map.possibleValues,
+      label: map.label,
+    });
+  }
 }
 
 class Properties {
-  private properties_ = new Map<string, OptionTypes>();
+  private properties_ = new Map<string, any>();
 
-  setProperty(name: string, value: OptionTypes) {
-    this.properties_.set(name, value);
+  deleteProperty(name: string) {
+    const val = this.properties_.get(name);
+    this.properties_.delete(name);
+    reactor.dispatchEvent('property-changed', {
+      detail: {
+        name,
+        previousValue: val,
+        deleted: true,
+      },
+    });
   }
 
   getProperty(name: string) {
     return this.properties_.get(name);
   }
 
-  deleteProperty(name: string) {
-    this.properties_.delete(name);
+  getTypedProperty<T>(name: string) {
+    const prop = this.properties_.get(name);
+    return prop && prop as T;
+  }
+
+  setProperty(name: string, value: any) {
+    const prev = this.properties_.get(name);
+    this.properties_.set(name, value);
+    reactor.dispatchEvent('property-changed', {
+      detail: {
+        name,
+        previousValue: prev,
+        newValue: value,
+      },
+    });
   }
 }
+
+reactor.registerEventType('property-changed');
 
 export class Service {
   private keybindOptions_: Options;
@@ -189,15 +216,15 @@ export class Service {
     ]);
   }
 
-  static getKeybindOptions() {
-    return this.instance_.keybindOptions_;
-  }
-
   static getGameOptions() {
     return this.instance_.gameOptions_;
   }
 
   static getGameProperties() {
     return this.instance_.gameProperties_;
+  }
+
+  static getKeybindOptions() {
+    return this.instance_.keybindOptions_;
   }
 }
