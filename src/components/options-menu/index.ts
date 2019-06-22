@@ -54,15 +54,20 @@ export class OptionsMenu extends PolymerElement {
 
   show() {
     this.style.opacity = '1';
+    this.style.zIndex = '2';
   }
 
   hide() {
     this.style.opacity = '0';
+    this.style.zIndex = '-1';
   }
 
-  handleKeyPressed(action: Action) {
+  handleKeyPressed(action: Action, e: CustomEvent) {
+    e.stopPropagation();
+
     const selectedRow = this.menuOptions_.focusedItem as PaperItemElement;
     const options = selectedRow && selectedRow.querySelector('paper-listbox');
+
     if (options) {
       if (action === Action.LEFT) {
         options.selectPrevious();
@@ -70,12 +75,21 @@ export class OptionsMenu extends PolymerElement {
         options.selectNext();
       }
     }
-    // this.keybindings_.handleKeyPressed(action);
+
+    if (action === Action.UP) {
+      this.menuOptions_._focusPrevious();
+    } else if (action === Action.DOWN) {
+      this.menuOptions_._focusNext();
+    } else if (action === Action.CONFIRM) {
+      const valueAttr = (this.menuOptions_.focusedItem as HTMLElement)
+          .getAttribute('value');
+      const valueProp = (this.menuOptions_.focusedItem as any).value;
+      this.optionItemSelected_(valueAttr || valueProp);
+    }
   }
 
-  protected optionItemSelected_(e: CustomEvent) {
-    e.stopPropagation();
-    switch (e.detail.selected) {
+  protected optionItemSelected_(selected: string) {
+    switch (selected) {
       case 'textSpeed':
         // fallthrough
       case 'battleEffects':

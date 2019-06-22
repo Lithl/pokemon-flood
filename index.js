@@ -33,7 +33,7 @@ for (const key in whitelist) {
 
 app.use(bodyParser.json());
 app.post('/user/:id/keys', (req, res) => {
-  const valuesPlaceholder = Object.keys(req.body).map((action) =>
+  const valuesPlaceholder = Object.keys(req.body).map(() =>
       '(?, ?, ?, ?)').join(',');
   const values = Object.keys(req.body).reduce((arr, action) => {
     arr.push(

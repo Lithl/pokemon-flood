@@ -29,6 +29,9 @@ export class KeybindingsMenu extends PolymerElement {
   @property() protected keybindingsEndpoint_ = '';
   private editAction_?: Action;
   private isShowing_ = false;
+  private isTransitioning_ = false;
+  private current_ = 0;
+  private editingBinding_ = false;
 
   static get template() {
     // @ts-ignore
@@ -40,28 +43,30 @@ export class KeybindingsMenu extends PolymerElement {
 
     this.computeActions();
 
-    this.addEventListener('keyup', (kbd) => {
+    document.body.addEventListener('keyup', (kbd) => {
+      if (!this.isShowing_) return;
+      if (this.isTransitioning_) {
+        this.isTransitioning_ = false;
+        return;
+      }
       kbd.preventDefault();
 
-      if (kbd.code === 'ArrowUp') {
-        kbd.stopPropagation();
-        this.menuOptions_._focusNext();
-      }
-      if (kbd.code === 'ArrowDown') {
-        kbd.stopPropagation();
-        this.menuOptions_._focusPrevious();
-      }
-
-      if ((options.getOption('CONFIRM') as string[]).indexOf(kbd.code) >= 0) {
-        this.optionItemSelected_(this.menuOptions_.selected as string);
-      }
-
-      if ((options.getOption('DOWN') as string[]).indexOf(kbd.code) >= 0) {
-        this.menuOptions_._focusNext();
-      }
-
-      if ((options.getOption('UP') as string[]).indexOf(kbd.code) >= 0) {
-        this.menuOptions_._focusPrevious();
+      if (!this.editingBinding_) {
+        if ((options.getOption('DOWN') as string[]).indexOf(kbd.code) >= 0) {
+          this.current_ = (this.current_ + 1) % (this.actions_.length + 1);
+        } else if ((options.getOption('UP') as string[])
+            .indexOf(kbd.code) >= 0) {
+          this.current_--;
+          if (this.current_ < 0) {
+            this.current_ += this.actions_.length + 1;
+          }
+        } else if ((options.getOption('CONFIRM') as string[]).indexOf(kbd.code) >= 0) {
+          if (this.current_ < this.actions_.length) {
+            this.optionItemSelected_(this.actions_[this.current_].value);
+          } else {
+            this.optionItemSelected_('confirm');
+          }
+        }
       }
     });
     document.body.addEventListener('keyup', (kbd) => {
@@ -102,12 +107,17 @@ export class KeybindingsMenu extends PolymerElement {
     this.style.opacity = '1';
     this.style.zIndex = '2';
     this.isShowing_ = true;
+    this.isTransitioning_ = true;
   }
 
   hide() {
     this.style.opacity = '0';
     this.style.zIndex = '-1';
     this.isShowing_ = false;
+  }
+
+  protected isCurrent_(index: number, current: number) {
+    return current === index ? 'is-selected' : '';
   }
 
   private optionItemSelected_(code: string) {
@@ -177,7 +187,7 @@ export class KeybindingsMenu extends PolymerElement {
       });
     });
 
-    this.menuOptions_.selectIndex(-1);
+    this.current_ = 0;
     this.hide();
     (this.parentNode as any).host.grabFocus();
   }
@@ -212,6 +222,7 @@ export class KeybindingsMenu extends PolymerElement {
     if (!nthItem) return;
 
     nthItem.classList.toggle('edit-binding', true);
+    this.editingBinding_ = true;
 
     const newBinding = (kbd: KeyboardEvent) => {
       kbd.preventDefault();
@@ -226,7 +237,6 @@ export class KeybindingsMenu extends PolymerElement {
       const opt = options.getOption(this.editAction_ as string) as string[];
       nthItem.classList.toggle('binding-changed', opt[idx] !== kbd.code);
 
-
       nthItem.classList.toggle('edit-binding', false);
 
       document.body.removeEventListener('keyup', newBinding);
@@ -236,6 +246,7 @@ export class KeybindingsMenu extends PolymerElement {
         list.selectedValues = [];
         this.grabFocus();
         this.editAction_ = undefined;
+        this.editingBinding_ = false;
       }
     };
     const nextKeyup = (kbd: KeyboardEvent) => {

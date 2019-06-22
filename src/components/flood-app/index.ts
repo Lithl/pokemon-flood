@@ -117,7 +117,7 @@ export class FloodApp extends DeclarativeEventListeners(PolymerElement) {
 
   protected handleKeyPressed_(e: CustomEvent) {
     if (!e.detail.down && this.gameState_ === State.OPTIONS_MENU) {
-      this.optionsMenu_.handleKeyPressed(e.detail.action);
+      this.optionsMenu_.handleKeyPressed(e.detail.action, e);
     }
   }
 

@@ -40,6 +40,7 @@ export class KeyboardHandler extends PolymerElement {
             detail: {
               down: true,
               action: name,
+              srcEvent: kbd,
             },
           }));
         }
@@ -57,6 +58,7 @@ export class KeyboardHandler extends PolymerElement {
             detail: {
               down: false,
               action: name,
+              srcEvent: kbd,
             },
           }));
         }

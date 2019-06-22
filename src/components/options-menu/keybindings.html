@@ -11,8 +11,8 @@
     id="menuOptions"
     attr-for-selected="value"
     selected="[[actions_.0.value]]">
-  <template is="dom-repeat" items="[[actions_]]">
-    <paper-item value="[[item.value]]">
+  <template id="actionsList" is="dom-repeat" items="[[actions_]]">
+    <paper-item value="[[item.value]]" class$="[[isCurrent_(index, current_)]]">
       <span>[[item.name]]</span>
       <paper-listbox attr-for-selected="value" on-iron-activate="editBindingDirect_">
         <paper-item value="key1"><span>[[bindingText_(item.value, item.binding1, 0)]]</span></paper-item>
@@ -20,5 +20,5 @@
       </paper-listbox>
     </paper-item>
   </template>
-  <paper-item value="confirm" class="confirm"><span>Confirm</span></paper-item>
+  <paper-item value="confirm" class$="confirm [[isCurrent_(8, current_)]]"><span>Confirm</span></paper-item>
 </paper-listbox>

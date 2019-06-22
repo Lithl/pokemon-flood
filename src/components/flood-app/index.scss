@@ -9,5 +9,6 @@
 title-menu,
 options-menu {
     opacity: 0;
+    z-index: -1;
     transition: opacity .5s;
 }

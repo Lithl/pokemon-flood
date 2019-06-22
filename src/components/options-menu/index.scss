@@ -63,12 +63,12 @@ paper-listbox {
 
     --paper-item-selected-weight: normal;
 
-    &:focus {
+    &.is-selected {
       border: 6px #338 ridge;
     }
 
     &:focus::before {
-      background-color: transparent;
+      background: transparent;
     }
   }
 }
@@ -81,6 +81,7 @@ paper-listbox {
 keybindings-menu {
   opacity: 0;
   z-index: -1;
+  transition: opacity .5s;
 }
 
 .edit-binding > span {

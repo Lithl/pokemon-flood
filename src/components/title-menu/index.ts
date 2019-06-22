@@ -25,9 +25,11 @@ export class TitleMenu extends PolymerElement {
 
   show() {
     this.style.opacity = '1';
+    this.style.zIndex = '2';
   }
 
   hide() {
     this.style.opacity = '0';
+    this.style.zIndex = '-1';
   }
 }
