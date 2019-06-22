@@ -1,0 +1,46 @@
+@import '../../common';
+
+:host {
+  @include full-screen;
+  background-color: $backgroundColor;
+}
+
+paper-listbox {
+  width: 33vw;
+  margin: 33vh auto 0 auto;
+  padding: $whitespaceDistance 0 $whitespaceDistance 0;
+  background-color: transparent;
+  display: block;
+
+  paper-item {
+    margin: $whitespaceDistance;
+    border: $borderRidge;
+    border-radius: $borderRadius;
+    padding: $whitespaceDistance;
+    color: $foregroundColor;
+    user-select: none;
+
+    --paper-item-selected-weight: normal;
+
+    // increases the size of "new game" menu item if there is no save data, or
+    // the "load game" menu item if there is save data
+    &:nth-last-of-type(2) {
+      height: 150px;
+      font-size: 250%;
+    }
+
+    span {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+
+    &:focus::before {
+      background-color: transparent;
+    }
+
+    &.selected {
+      border-color: $borderColorSelected;
+    }
+  }
+}
