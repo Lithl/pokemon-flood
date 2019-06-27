@@ -1,0 +1,28 @@
+@import '../../common';
+@import '../options-menu/index';
+
+.editing-binding > span {
+  background: linear-gradient(90deg, teal 0%, navy 50%, teal 100%);
+  background-size: 200% 100%;
+  animation: pulse-bg 2s cubic-bezier(.8, .2, .2, .8) infinite;
+  line-height: 2em;
+  margin: 0 24px;
+  border-radius: 4px;
+}
+
+.binding-changed {
+  font-weight: bold;
+  color: #faa;
+  text-shadow:
+    1px -1px 0 #800,
+    1px 1px 0 #800,
+    -1px 1px 0 #800,
+    -1px -1px 0 #800;
+}
+
+@keyframes pulse-bg {
+  0% {background-position: 0% 50%;}
+  25% {background-position: 100% 50%;}
+  50% {background-position: 0% 50%;}
+  100% {background-position: 0% 50%;}
+}

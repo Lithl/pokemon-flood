@@ -1,0 +1,29 @@
+<style include="keybinding-menu"></style>
+
+<!-- <iron-ajax
+    id="saveKeybindings"
+    method="post"
+    url="[[keybindingsEndpoint_]]"
+    content-type="application/json"></iron-ajax> -->
+<paper-listbox
+    id="menuOptions"
+    attr-for-selected="value">
+  <template id="actionsList" is="dom-repeat" items="[[actions_]]">
+    <paper-item value="[[item.value]]">
+      <span>[[item.name]]</span>
+      <paper-listbox attr-for-selected="value">
+        <paper-item
+            value="key1"
+            class$="[[editStatus_(index, currentlyBindingIdx_, 0)]]">
+          <span>[[bindingText_(item.value, item.binding1, 0)]]</span>
+        </paper-item>
+        <paper-item
+            value="key2"
+            class$="[[editStatus_(index, currentlyBindingIdx_, 1)]]">
+          <span>[[bindingText_(item.value, item.binding2, 1)]]</span>
+        </paper-item>
+      </paper-listbox>
+    </paper-item>
+  </template>
+  <paper-item value="confirm" class="confirm"><span>Confirm</span></paper-item>
+</paper-listbox>
