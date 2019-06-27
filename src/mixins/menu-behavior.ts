@@ -1,7 +1,8 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element';
+import { PaperItemElement } from '@polymer/paper-item/paper-item';
 
 import { Service } from '../options';
-import { Constructor } from '../util';
+import { Constructor, Optional } from '../util';
 
 const keys = Service.getKeybindOptions();
 
@@ -11,6 +12,7 @@ export function MenuBehavior<T extends Constructor<PolymerElement>>
     protected current_ = 0;
     protected isShowing_ = false;
     protected ignoreKeys_ = false;
+    protected menuItems_: Optional<PaperItemElement>[] = [];
     private numItems_: number;
     private initial_: number;
 
@@ -50,9 +52,10 @@ export function MenuBehavior<T extends Constructor<PolymerElement>>
           this.confirmAt_(this.current_);
         } else if (cancel.indexOf(kbd.code) >= 0) {
           this.cancelAt_(this.current_);
-        } else if (right.indexOf(kbd.code) >= 0
-            || left.indexOf(kbd.code) >= 0) {
+        } else if (right.indexOf(kbd.code) >= 0) {
           this.horizontalAt_(this.current_, false);
+        } else if (left.indexOf(kbd.code) >= 0) {
+          this.horizontalAt_(this.current_, true);
         } else if (menu.indexOf(kbd.code) >= 0) {
           this.menuAt_(this.current_);
         } else if (select.indexOf(kbd.code) >= 0) {
@@ -65,8 +68,11 @@ export function MenuBehavior<T extends Constructor<PolymerElement>>
       this.current_ = this.initial_;
     }
 
-    protected currentChanged_(_current: number, _previous: number) {
-      // nop; implement in subclass
+    protected currentChanged_(current: number, previous: number) {
+      if (this.menuItems_[previous] && this.menuItems_[current]) {
+        this.menuItems_[previous]!.classList.toggle('selected', false);
+        this.menuItems_[current]!.classList.toggle('selected', true);
+      }
     }
 
     protected confirmAt_(_idx: number) {
