@@ -31,16 +31,21 @@ export class FloodScreens extends PolymerElement {
     });
   }
 
-  showScreen(name: string) {
+  showScreen(name: string, property?: string, value?: any) {
     const screenNames = Object.keys(this.screens_);
     screenNames.filter((n) => n !== name).forEach((k) => {
       this.screens_[k].hide();
     });
+    if (property && value) {
+      (this.screens_[name] as any)[property] = value;
+    }
     this.screens_[name].show();
   }
 }
 
 export abstract class FloodScreen extends PolymerElement {
+  protected isShowing_ = false;
+
   ready() {
     super.ready();
     this.style.transition = 'opacity .5s';
@@ -50,10 +55,12 @@ export abstract class FloodScreen extends PolymerElement {
   show() {
     this.style.opacity = '1';
     this.style.zIndex = '2';
+    this.isShowing_ = true;
   }
 
   hide() {
     this.style.opacity = '0';
     this.style.zIndex = '-1';
+    this.isShowing_ = false;
   }
 }
