@@ -3,6 +3,7 @@ import { customElement, property, observe, query } from '@polymer/decorators';
 import { FloodScreens } from '../flood-screens';
 import '../title-menu';
 import '../options-menu';
+import '../keybinding-menu';
 
 import * as template from './template.html';
 import { Service } from '../../options';
@@ -70,12 +71,15 @@ export class FloodApp extends PolymerElement {
         case State.FIELD:
           break;
         case State.OPTIONS_MENU:
-          this.screens_.showScreen(
-            State.OPTIONS_MENU,
-            'returnState',
-            reaction.detail.previousValue);
+          const prev = reaction.detail.previousValue;
+          if (prev === State.KEYBINDING_MENU) {
+            this.screens_.showScreen(State.OPTIONS_MENU);
+          } else {
+            this.screens_.showScreen(State.OPTIONS_MENU, 'returnState', prev);
+          }
           break;
         case State.KEYBINDING_MENU:
+            this.screens_.showScreen(State.KEYBINDING_MENU);
           break;
         default:
           assertUnreachable(newState);
