@@ -2,8 +2,7 @@
 
 <paper-listbox
     id="menuOptions"
-    attr-for-selected="value"
-    selected="newGame">
+    attr-for-selected="value">
   <paper-item value="newGame"><span>New Game</span></paper-item>
   <template is="dom-if" if="[[saveGameAvailable_]]">
     <paper-item value="loadGame"><span>Load Game</span></paper-item>

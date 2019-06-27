@@ -66,7 +66,6 @@ export class TitleMenu extends MenuBehavior
 
   protected confirmAt_(current: number) {
     const opt = current as TitleMenuOptions;
-    console.log('confirming in title screen');
     switch (opt) {
       case TitleMenuOptions.NEW_GAME:
         console.log('new game');
