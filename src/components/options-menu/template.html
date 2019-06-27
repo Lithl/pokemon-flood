@@ -2,12 +2,11 @@
 
 <paper-listbox
     id="menuOptions"
-    attr-for-selected="value"
-    selected="textSpeed">
+    attr-for-selected="value">
   <template is="dom-repeat" items="[[options_]]">
     <paper-item value="[[item.name]]">
       <span>[[item.label]]</span>
-      <paper-listbox attr-for-selected="value" selected="[[item.current]]">
+      <paper-listbox attr-for-selected="value">
         <template is="dom-repeat" items="[[item.possibleValues]]" as="optionValue">
           <paper-item value="[[optionValue]]" class$="[[isCurrentValue_(optionValue, item.current)]]">
             <span>[[optionValue]]</span>
