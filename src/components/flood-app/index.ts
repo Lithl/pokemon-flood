@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import { customElement, property, observe, query } from '@polymer/decorators';
 import { FloodScreens } from '../flood-screens';
 import '../title-menu';
+import '../options-menu';
 
 import * as template from './template.html';
 import { Service } from '../../options';
@@ -16,6 +17,7 @@ export enum State {
   INTRO_SEQUENCE = 'intro sequence',
   FIELD = 'field',
   OPTIONS_MENU = 'options',
+  KEYBINDING_MENU = 'edit keybindings',
 }
 
 const properties = Service.getGameProperties();
@@ -68,6 +70,12 @@ export class FloodApp extends PolymerElement {
         case State.FIELD:
           break;
         case State.OPTIONS_MENU:
+          this.screens_.showScreen(
+            State.OPTIONS_MENU,
+            'returnState',
+            reaction.detail.previousValue);
+          break;
+        case State.KEYBINDING_MENU:
           break;
         default:
           assertUnreachable(newState);
