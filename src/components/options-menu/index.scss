@@ -1,0 +1,74 @@
+@import '../../common';
+
+:host {
+  @include full-screen;
+  background-color: $backgroundColor;
+}
+
+paper-listbox {
+  display: block;
+  width: 50vw;
+  margin: 20vh auto 0 auto;
+  padding: $whitespaceDistance 0 $whitespaceDistance 0;
+  border: $borderRidge;
+  background-color: transparent;
+
+  paper-item {
+    margin: $whitespaceDistance;
+    border-radius: $borderRadius;
+    padding: 0 $whitespaceDistance;
+    color: $foregroundColor;
+    box-sizing: border-box;
+    height: 4em;
+
+    span {
+      display: inline-block;
+      min-width: 20%;
+    }
+
+    paper-listbox {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      margin: initial;
+      border: none;
+
+      paper-item {
+        margin: 0;
+        flex: 1 0;
+
+        span {
+          display: block;
+          width: 100%;
+          text-align: center;
+        }
+
+        &.selected {
+          border: none;
+          color: $selectedColor;
+          @include stroke(black);
+          text-decoration: underline;
+          font-weight: bolder;
+          padding: 0 $whitespaceDistance;
+        }
+      }
+    }
+
+    --paper-item-selected-weight: normal;
+
+    &.selected {
+      border: $borderRidge;
+      border-color: $borderColorSelected;
+      padding: 0 $whitespaceDistance - $borderWidth;
+    }
+
+    &:focus::before {
+      background: transparent;
+    }
+  }
+}
+
+.confirm > span {
+  width: 100%;
+  text-align: center;
+}

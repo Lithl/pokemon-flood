@@ -1,0 +1,21 @@
+<style include="options-menu"></style>
+
+<paper-listbox
+    id="menuOptions"
+    attr-for-selected="value"
+    selected="textSpeed">
+  <template is="dom-repeat" items="[[options_]]">
+    <paper-item value="[[item.name]]">
+      <span>[[item.label]]</span>
+      <paper-listbox attr-for-selected="value" selected="[[item.current]]">
+        <template is="dom-repeat" items="[[item.possibleValues]]" as="optionValue">
+          <paper-item value="[[optionValue]]" class$="[[isCurrentValue_(optionValue, item.current)]]">
+            <span>[[optionValue]]</span>
+          </paper-item>
+        </template>
+      </paper-listbox>
+    </paper-item>
+  </template>
+  <paper-item value="keybindings"><span>Edit keybindings</span></paper-item>
+  <paper-item value="confirm" class="confirm"><span>Confirm</span></paper-item>
+</paper-listbox>
