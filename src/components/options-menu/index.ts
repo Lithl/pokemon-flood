@@ -1,18 +1,22 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { customElement, property, query } from '@polymer/decorators';
 import { PaperListboxElement } from '@polymer/paper-listbox';
+import { IronAjaxElement } from '@polymer/iron-ajax';
 import { MenuBehavior } from '../../mixins/menu-behavior';
 import { FloodScreen } from '../flood-screens';
 import { State } from '../flood-app';
 
-import * as template from './template.html';
+import { default as template } from './template.html';
 import { Service } from '../../options';
 import { Constructor, assertUnreachable, Optional } from '../../util';
+import { Reactor, Reaction } from '../../reactor';
 
 import './index.scss?name=options-menu';
 
 const options = Service.getGameOptions();
 const properties = Service.getGameProperties();
+
+const reactor = Reactor.instance;
 
 interface OptionsModel {
   name: string;
@@ -36,6 +40,7 @@ enum GameOptions {
 export class OptionsMenu extends MenuBehavior
     (FloodScreen as unknown as Constructor<FloodScreen>) {
   @query('#menuOptions') private menuOptions_!: PaperListboxElement;
+  @query('#saveOptions') private optionsAjax_!: IronAjaxElement;
   @property() private options_: OptionsModel[] = [];
   @property() returnState: Optional<State>;
 
@@ -46,6 +51,9 @@ export class OptionsMenu extends MenuBehavior
 
   constructor() {
     super(options.getOptionNames().length + 2, 0);
+
+    reactor.addEventListener('option-changed',
+        (reaction) => this.optionChanged_(reaction));
   }
 
   ready() {
@@ -70,6 +78,15 @@ export class OptionsMenu extends MenuBehavior
       });
       this.menuItems_[this.current_]!.classList.toggle('selected', true);
     });
+  }
+
+  private optionChanged_(reaction: Reaction) {
+    const opt = reaction.detail.newValue;
+    const value = reaction.detail.name;
+    const optionsIdx = this.options_.findIndex((o) => o.name === value);
+    if (optionsIdx >= 0) {
+      this.set(`options_.${optionsIdx}.current`, opt);
+    }
   }
 
   protected horizontalAt_(idx: number, left: boolean) {
@@ -109,12 +126,25 @@ export class OptionsMenu extends MenuBehavior
         properties.setProperty('game-state', State.KEYBINDING_MENU);
         break;
       case GameOptions.CONFIRM:
-        // TODO: save options
+        this.options_.forEach((option) => {
+          options.setOption(option.name, option.current);
+        });
+        const id = properties.getProperty('user-id');
+        this.optionsAjax_.url = `/user/${id}/options`;
+        this.optionsAjax_.body = this.options_.reduce((body, value) => {
+          body[value.name] = value.current;
+          return body;
+        }, {} as {[key: string]: string | number});
+        this.optionsAjax_.generateRequest();
         this.cancelAt_();
         break;
       default:
         assertUnreachable(opt);
     }
+  }
+
+  protected handleSaveError_(err: CustomEvent) {
+    console.error(err.detail.error);
   }
 
   protected cancelAt_() {

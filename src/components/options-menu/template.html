@@ -1,5 +1,10 @@
 <style include="options-menu"></style>
 
+<iron-ajax
+    id="saveOptions"
+    method="post"
+    content-type="application/json"
+    on-error="handleSaveError_"></iron-ajax>
 <paper-listbox
     id="menuOptions"
     attr-for-selected="value">
