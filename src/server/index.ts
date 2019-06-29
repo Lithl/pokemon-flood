@@ -9,7 +9,7 @@ export function apply(root: string) {
   const pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
-    database: 'flood',
+    database: dbConfig.dbname,
     user: dbConfig.user,
     password: dbConfig.password,
   });
