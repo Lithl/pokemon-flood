@@ -53,6 +53,11 @@ class Options {
   resetDefaults() {
     this.defaults_.forEach((op) => {
       this.setOptions_(op);
+      reactor.dispatchEvent('option-reset', {
+        detail: {
+          name: op.name,
+        },
+      });
     });
   }
 
@@ -66,8 +71,17 @@ class Options {
       throw new TypeError('invalid option value');
     }
 
+    const previousValue = opt.current;
     opt.current = value;
     this.options_.set(name, opt);
+
+    reactor.dispatchEvent('option-changed', {
+      detail: {
+        name,
+        previousValue,
+        newValue: opt.current,
+      },
+    });
   }
 
   private setOptions_(map: OptionsMap) {
@@ -75,7 +89,8 @@ class Options {
       throw new TypeError('possibleValues must contain at least two values');
     }
     if (!map.value && !map.possibleValues) {
-      throw new TypeError('if possibleValues is undefined, value must be defined');
+      throw new TypeError(
+          'if possibleValues is undefined, value must be defined');
     }
 
     this.options_.set(map.name, {
@@ -85,6 +100,9 @@ class Options {
     });
   }
 }
+
+reactor.registerEventType('option-changed');
+reactor.registerEventType('option-reset');
 
 class Properties {
   private properties_ = new Map<string, any>();
