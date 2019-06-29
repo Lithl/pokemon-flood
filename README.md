@@ -59,11 +59,11 @@ difficult. But it's certainly an achievement.
 
 ## Wait, no random battles and no generic enemy trainers?
 Yes! However, if you would like to go back to a more familiar Pokemon
-experience, you can reset the world state from the load game/new game screen.
-All your genocidal history will be forgotten.
+experience, you can reset the world state from the title screen. All your
+genocidal history will be forgotten.
 
 ## What happens if my own party all die?
-If all of the Pokemon in your battle party die, you'll als die. Your impact on
+If all of the Pokemon in your battle party die, you'll also die. Your impact on
 the world remains for a new game, but you will no longer be able to load that
 save game. It doesn't matter if you saved immediately prior to the battle where
 you died. It doesn't matter if you've got a hundred other Pokemon waiting in
