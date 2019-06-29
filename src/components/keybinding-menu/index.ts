@@ -6,7 +6,7 @@ import { MenuBehavior } from '../../mixins/menu-behavior';
 import { FloodScreen } from '../flood-screens';
 import { State } from '../flood-app';
 
-import * as template from './template.html';
+import { default as template } from './template.html';
 import { Constructor, assertUnreachable } from '../../util';
 import { Service, Action } from '../../options';
 import { Reactor, Reaction } from '../../reactor';
@@ -158,10 +158,12 @@ export class KeybindingMenu extends  MenuBehavior
     const opt = reaction.detail.newValue;
     const value = reaction.detail.name;
     const bindingIdx = this.actions_.findIndex((b) => b.value === value);
-    this.set(`actions_.${bindingIdx}.binding1`, opt[0]
-        || String.fromCharCode(160));
-    this.set(`actions_.${bindingIdx}.binding2`, opt[1]
-        || String.fromCharCode(160));
+    if (bindingIdx >= 0) {
+      this.set(`actions_.${bindingIdx}.binding1`, opt[0]
+          || String.fromCharCode(160));
+      this.set(`actions_.${bindingIdx}.binding2`, opt[1]
+          || String.fromCharCode(160));
+    }
   }
 
   private saveBindings_() {
