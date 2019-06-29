@@ -1,6 +1,7 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { customElement, query, property } from '@polymer/decorators';
 import { PaperListboxElement } from '@polymer/paper-listbox';
+import { IronAjaxElement } from '@polymer/iron-ajax';
 import { MenuBehavior } from '../../mixins/menu-behavior';
 import { FloodScreen } from '../flood-screens';
 import { State } from '../flood-app';
@@ -8,6 +9,7 @@ import { State } from '../flood-app';
 import * as template from './template.html';
 import { Constructor, assertUnreachable } from '../../util';
 import { Service, Action } from '../../options';
+import { Reactor, Reaction } from '../../reactor';
 
 import './index.scss?name=keybinding-menu';
 
@@ -33,10 +35,13 @@ enum ActionOptions {
 const properties = Service.getGameProperties();
 const options = Service.getKeybindOptions();
 
+const reactor = Reactor.instance;
+
 @customElement('keybinding-menu')
 export class KeybindingMenu extends  MenuBehavior
     (FloodScreen as unknown as Constructor<FloodScreen>) {
   @query('#menuOptions') private menuOptions_!: PaperListboxElement;
+  @query('#saveKeybindings') private keybindingAjax_!: IronAjaxElement;
   @property() private actions_: ActionBinding[] = [];
   @property() private currentlyBindingIdx_?: number;
   private trapKeyup_ = false;
@@ -48,6 +53,9 @@ export class KeybindingMenu extends  MenuBehavior
 
   constructor() {
     super(options.getOptionNames().length + 1, 0);
+
+    reactor.addEventListener('option-changed',
+        (reaction) => this.keybindingChanged_(reaction));
 
     document.body.addEventListener('keyup', (kbd) => {
       if (!this.isShowing_ || !this.ignoreKeys_) return;
@@ -146,17 +154,31 @@ export class KeybindingMenu extends  MenuBehavior
     }
   }
 
+  private keybindingChanged_(reaction: Reaction) {
+    const opt = reaction.detail.newValue;
+    const value = reaction.detail.name;
+    const bindingIdx = this.actions_.findIndex((b) => b.value === value);
+    this.set(`actions_.${bindingIdx}.binding1`, opt[0]
+        || String.fromCharCode(160));
+    this.set(`actions_.${bindingIdx}.binding2`, opt[1]
+        || String.fromCharCode(160));
+  }
+
   private saveBindings_() {
     this.actions_.forEach((action) => {
       options.setOption(action.value, [action.binding1, action.binding2]);
     });
-    // TODO: send ajax request to /user/${properties.getProperty('userId')}/key
-    /*
-    body = this.actions_.reduce((body, value) => {
+    const id = properties.getProperty('user-id');
+    this.keybindingAjax_.url = `/user/${id}/keys`;
+    this.keybindingAjax_.body = this.actions_.reduce((body, value) => {
       body[value.value] = [value.binding1, value.binding2];
       return body;
     }, {} as {[key: string]: [string, string]});
-    */
+    this.keybindingAjax_.generateRequest();
+  }
+
+  protected handleSaveError_(err: CustomEvent) {
+    console.error(err.detail.error);
   }
 
   protected cancelAt_() {

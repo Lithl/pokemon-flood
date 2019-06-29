@@ -1,10 +1,10 @@
 <style include="keybinding-menu"></style>
 
-<!-- <iron-ajax
+<iron-ajax
     id="saveKeybindings"
     method="post"
-    url="[[keybindingsEndpoint_]]"
-    content-type="application/json"></iron-ajax> -->
+    content-type="application/json"
+    on-error="handleSaveError_"></iron-ajax>
 <paper-listbox
     id="menuOptions"
     attr-for-selected="value">
