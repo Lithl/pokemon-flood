@@ -154,6 +154,9 @@ export class OptionsMenu extends MenuBehavior
       setTimeout(() => {
         super.currentChanged_(0, this.current_);
         this.current_ = 0;
+        this.options_.forEach((option, idx) => {
+          this.set(`options_.${idx}.current`, options.getOption(option.name));
+        });
       }, 500);
     }
   }
