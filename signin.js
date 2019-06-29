@@ -1,4 +1,6 @@
 (() => {
+  let userRef = null;
+
   /**
    * Set the signed in/out state for the usrer
    * @param {boolean} isSignedIn whether the user is signed in
@@ -82,9 +84,11 @@
   function userChanged(user) {
     let imgUrl;
     if (user.isSignedIn()) {
+      userRef = user;
       imgUrl = user.getBasicProfile().getImageUrl();
       document.getElementById('mainApp').googleUser = user;
     } else {
+      userRef = null;
       document.getElementById('mainApp').googleUser = null;
     }
     setSigninState(user.isSignedIn(), imgUrl);
@@ -121,6 +125,19 @@
       }).then(onInit, onInitError);
     });
   }
+
+  window.getCurrentUser = function getCurrentUser() {
+    if (!userRef) return userRef;
+    const profile = userRef.getBasicProfile();
+    return {
+      id: profile.getId(),
+      name: profile.getName(),
+      givenName: profile.getGivenName(),
+      familyName: profile.getFamilyName(),
+      email: profile.getEmail(),
+      icon: profile.getImageUrl(),
+    };
+  };
 
   if (document.readyState !== 'loading') renderButton();
   else document.addEventListener('DOMContentLoaded', renderButton);
