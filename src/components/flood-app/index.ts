@@ -7,7 +7,7 @@ import '../title-menu';
 import '../options-menu';
 import '../keybinding-menu';
 
-import * as template from './template.html';
+import { default as template } from './template.html';
 import { Service } from '../../options';
 import { Reactor, Reaction } from '../../reactor';
 import { assertUnreachable } from '../../util';
@@ -26,6 +26,7 @@ export enum State {
 const properties = Service.getGameProperties();
 properties.setProperty('game-state', State.SIGNIN);
 const keybindings = Service.getKeybindOptions();
+const options = Service.getGameOptions();
 
 const reactor = Reactor.instance;
 
@@ -35,6 +36,7 @@ export class FloodApp extends PolymerElement {
 
   @query('#topLevelScreens') protected screens_!: FloodScreens;
   @query('#keybindings') protected keybindingAjax_!: IronAjaxElement;
+  @query('#options') protected optionsAjax_!: IronAjaxElement;
 
   static get template() {
     // @ts-ignore
@@ -50,13 +52,28 @@ export class FloodApp extends PolymerElement {
   @observe('googleUser')
   protected googleUserChanged_(user: gapi.auth2.GoogleUser) {
     if (user) {
+      const id = user.getId();
+
       properties.setProperty('game-state', State.TITLE_MENU);
-      properties.setProperty('user-id', user.getId());
-      this.keybindingAjax_.url = `/user/${user.getId()}/keys`;
+      properties.setProperty('user-id', id);
+
+      this.keybindingAjax_.url = `/user/${id}/keys`;
       this.keybindingAjax_.generateRequest();
+
+      this.optionsAjax_.url = `/user/${id}/options`;
+      this.optionsAjax_.generateRequest();
     } else {
       properties.setProperty('game-state', State.SIGNIN);
       properties.deleteProperty('user-id');
+    }
+  }
+
+  protected handleOptionsResponse_(e: CustomEvent) {
+    const savedOptions = e.detail.response;
+    if (Object.keys(savedOptions).length > 0) {
+      Object.keys(savedOptions).forEach((k) => {
+        options.setOption(k, savedOptions[k]);
+      });
     }
   }
 
