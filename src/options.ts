@@ -196,37 +196,37 @@ export class Service {
     ]);
     this.gameOptions_ = new Options([
       {
-        name: 'textSpeed',
+        name: 'text_speed',
         label: 'Text speed',
         possibleValues: ['Slow', 'Normal', 'Fast'],
         value: 'Normal',
       },
       {
-        name: 'battleEffects',
+        name: 'battle_effects',
         label: 'Battle effects',
         possibleValues: ['On', 'Off'],
         value: 'On',
       },
       {
-        name: 'battleStyle',
+        name: 'battle_style',
         label: 'Battle style',
         possibleValues: ['Switch', 'Set'],
         value: 'Switch',
       },
       {
-        name: 'music',
+        name: 'music_volume',
         label: 'Music volume',
         possibleValues: [0, 1, 2, 3, 4, 5],
         value: 3,
       },
       {
-        name: 'sfx',
+        name: 'effect_volume',
         label: 'Effect volume',
         possibleValues: [0, 1, 2, 3, 4, 5],
         value: 3,
       },
       {
-        name: 'cries',
+        name: 'pokemon_cries',
         label: 'Pokemon cries',
         possibleValues: [0, 1, 2, 3, 4, 5],
         value: 3,
