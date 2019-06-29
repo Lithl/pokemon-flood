@@ -4,7 +4,7 @@ import { FloodScreen } from '../flood-screens';
 import { PaperListboxElement } from '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-item';
 
-import * as template from './template.html';
+import { default as template } from './template.html';
 import { MenuBehavior } from '../../mixins/menu-behavior';
 import { Constructor, assertUnreachable } from '../../util';
 import { Service } from '../../options';

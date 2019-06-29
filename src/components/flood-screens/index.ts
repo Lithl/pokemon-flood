@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import { customElement } from '@polymer/decorators';
 
-import * as template from './template.html';
+import { default as template } from './template.html';
 
 import './index.scss?name=flood-screens';
 
