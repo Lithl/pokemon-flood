@@ -43,10 +43,11 @@ export function apply(app: express.Application, pool: mysql.Pool) {
             inner join pokemon_cries_values pc on pc.value=?
           )`, values, (err) => {
         if (err) {
-          console.error(err);
+          console.error(req.params.id, err);
           res.sendStatus(500);
           return;
         }
+        console.log(req.params.id, 'updated options', values.slice(1));
         res.sendStatus(200);
       });
   });
@@ -87,13 +88,15 @@ export function apply(app: express.Application, pool: mysql.Pool) {
         req.params.id,
         (err, results: optionRow[]) => {
           if (err) {
-            console.error(err);
+            console.error(req.params.id, err);
             res.sendStatus(500);
             return;
           }
-          let body: Optional<optionRow>;
-          if (results.length) {
-            body = results[0];
+          const body = results[0];
+          if (body) {
+            console.log(req.params.id, 'sending saved options');
+          } else {
+            console.log(req.params.id, 'using default options');
           }
           res.status(200).send(body || {});
         });

@@ -29,10 +29,11 @@ export function apply(app: express.Application, pool: mysql.Pool) {
     pool.query(`replace into keybindings (id, action, binding1, binding2)
         values ${valuesPlaceholder}`, values, (err) => {
       if (err) {
-        console.error(err);
+        console.error(req.params.id, err);
         res.sendStatus(500);
         return;
       }
+      console.log(req.params.id, 'updated keybindings', values);
       res.sendStatus(200);
     });
   });
@@ -53,7 +54,7 @@ export function apply(app: express.Application, pool: mysql.Pool) {
         from keybindings where id = ?`,
       req.params.id, (err, results: keybindRow[]) => {
         if (err) {
-          console.error(err);
+          console.error(req.params.id, err);
           res.sendStatus(500);
           return;
         }
@@ -61,6 +62,11 @@ export function apply(app: express.Application, pool: mysql.Pool) {
           obj[row.action] = [row.binding1 || '', row.binding2 || ''];
           return obj;
         }, {} as {[action: string]: [string, string]});
+        if (results.length) {
+          console.log(req.params.id, 'sending saved keybindings');
+        } else {
+          console.log(req.params.id, 'using default keybindings');
+        }
         res.status(200).send(body);
       });
   });
