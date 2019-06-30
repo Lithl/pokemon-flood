@@ -6,6 +6,7 @@ import { FloodScreens } from '../flood-screens';
 import '../title-menu';
 import '../options-menu';
 import '../keybinding-menu';
+import '../intro-sequence';
 
 import { default as template } from './template.html';
 import { Service } from '../../options';
@@ -97,6 +98,7 @@ export class FloodApp extends PolymerElement {
           this.screens_.showScreen(State.TITLE_MENU);
           break;
         case State.INTRO_SEQUENCE:
+          this.screens_.showScreen(State.INTRO_SEQUENCE);
           break;
         case State.FIELD:
           break;
