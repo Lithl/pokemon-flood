@@ -1,0 +1,28 @@
+@import '../../common';
+
+:host {
+  @include full-screen;
+  background-color: $backgroundColor;
+}
+
+#window {
+  border: $borderRidge;
+  position: relative;
+  left: 20vw;
+  top: 20vh;
+  width: 60vw;
+  height: 60vh;
+  background-color: white;
+}
+
+#window > img {
+  position: absolute;
+  top: calc(50% - 190px);
+  left: calc(50% - 250px);
+}
+
+#opening-eyes {
+  @include full-screen;
+  background-image: radial-gradient(ellipse 60% 0%, transparent, black 75%);
+  transition: opacity 2s;
+}
