@@ -28,7 +28,7 @@ export function apply(root: string) {
     'terms': 'terms.html',
   };
 
-  // app.use('/images', express.static('resources/images'));
+  app.use('/sprite-sheets', express.static('resources/sprite-sheets'));
   for (const key in whitelist) {
     const file = whitelist[key] || key;
     app.get(`/${key}`, (_: express.Request, res: express.Response) =>
