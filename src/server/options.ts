@@ -1,6 +1,5 @@
 import express from 'express';
 import * as mysql from 'mysql';
-import { Optional } from '../util';
 
 export function apply(app: express.Application, pool: mysql.Pool) {
   /**
