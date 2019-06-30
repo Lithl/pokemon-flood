@@ -68,7 +68,7 @@ export class TitleMenu extends MenuBehavior
     const opt = current as TitleMenuOptions;
     switch (opt) {
       case TitleMenuOptions.NEW_GAME:
-        console.log('new game');
+        properties.setProperty('game-state', State.INTRO_SEQUENCE);
         break;
       case TitleMenuOptions.CONTINUE:
         console.log('continue save');
