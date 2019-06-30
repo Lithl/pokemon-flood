@@ -29,6 +29,7 @@ export function apply(root: string) {
   };
 
   app.use('/sprite-sheets', express.static('resources/sprite-sheets'));
+  app.use('/images', express.static('resources/images'));
   for (const key in whitelist) {
     const file = whitelist[key] || key;
     app.get(`/${key}`, (_: express.Request, res: express.Response) =>
