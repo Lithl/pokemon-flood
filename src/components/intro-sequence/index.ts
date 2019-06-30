@@ -11,10 +11,12 @@ import './index.scss?name=intro-sequence';
 const eyeOpeningStops: {[key: string]: number} = {
   '0': 0,
   '500': 10,
-  '750': 2,
-  '1250': 20,
-  '1750': 15,
-  '3000': 40,
+  '750': 10,
+  '1000': 2,
+  '1500': 20,
+  '1750': 20,
+  '2250': 15,
+  '3500': 40,
 };
 
 @customElement('intro-sequence')
