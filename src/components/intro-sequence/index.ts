@@ -39,17 +39,19 @@ export class IntroSequence extends FloodScreen {
   show() {
     super.show();
 
-    this.start_ = Date.now();
-    this.interval_ = window.setInterval(() => {
-      const pctOpen = this.computePctOpen_();
-      this.openEyes_.style.backgroundImage =
-          `radial-gradient(ellipse 60% ${pctOpen}%, transparent, black 75%)`;
-      if (pctOpen === 40) {
-        clearInterval(this.interval_);
-        this.interval_ = 0;
-        this.openEyes_.style.opacity = '0';
-      }
-    }, 50);
+    setTimeout(() => {
+      this.start_ = Date.now();
+      this.interval_ = window.setInterval(() => {
+        const pctOpen = this.computePctOpen_();
+        this.openEyes_.style.backgroundImage =
+            `radial-gradient(ellipse 60% ${pctOpen}%, transparent, black 75%)`;
+        if (pctOpen === 40) {
+          clearInterval(this.interval_);
+          this.interval_ = 0;
+          this.openEyes_.style.opacity = '0';
+        }
+      }, 50);
+    }, 2000);
   }
 
   private computePctOpen_() {
