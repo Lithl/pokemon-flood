@@ -11,12 +11,12 @@ interface SpriteMap {
   [name: string]: SpriteConfig;
 }
 
-interface Sprite {
+export interface Sprite {
   readonly element: HTMLDivElement;
   setFrame: (idx: number) => void;
   reset: () => void;
   play: () => void;
-  stop: () => void;
+  stop: (completeLoop?: boolean) => void;
   swapTo: (name: string) => void;
 }
 
@@ -76,6 +76,7 @@ export class SpriteSheet extends PolymerElement {
     let currentFrame = 0;
     let lastFrame = 0;
     let interval = 0;
+    let stopAtNextLoop = false;
     const sprite: Sprite = {
       element: divElement,
       setFrame: (idx: number) => {
@@ -95,12 +96,18 @@ export class SpriteSheet extends PolymerElement {
             currentFrame++;
             currentFrame %= spriteConfig.frames.length;
             moveToFrame(currentFrame);
+            if (currentFrame === 0 && stopAtNextLoop) {
+              sprite.stop();
+            }
           }
         }, 50);
       },
-      stop: () => {
-        clearInterval(interval);
-        interval = 0;
+      stop: (completeLoop?: boolean) => {
+        if (completeLoop) stopAtNextLoop = true;
+        else {
+          clearInterval(interval);
+          interval = 0;
+        }
       },
       swapTo: (name: string) => {
         spriteConfig = this.sprites_[name];
