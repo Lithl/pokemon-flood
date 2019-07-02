@@ -2,6 +2,7 @@ import { html } from '@polymer/polymer/polymer-element';
 import { customElement, query } from '@polymer/decorators';
 import { FloodScreen } from '../flood-screens';
 import { SpriteSheet } from '../sprite-sheet';
+import { DialogueBox } from '../dialogue-box';
 
 import { default as template } from './template.html';
 import { lerpPct, clamp } from '../../util';
@@ -23,6 +24,7 @@ const eyeOpeningStops: {[key: string]: number} = {
 export class IntroSequence extends FloodScreen {
   @query('#oak-dialogue') private oakDialogue_!: SpriteSheet;
   @query('#opening-eyes') private openEyes_!: HTMLDivElement;
+  @query('#intro-text') private introText_!: DialogueBox;
   private start_ = 0;
   private interval_ = 0;
 
@@ -34,13 +36,15 @@ export class IntroSequence extends FloodScreen {
   ready() {
     super.ready();
 
-    const eyesOpen = this.oakDialogue_.createSprite('open');
-    this.shadowRoot!.appendChild(eyesOpen.element);
+    const eyesOpen = this.oakDialogue_.createSprite('closed');
+    this.introText_.setAvatar(eyesOpen);
+    this.introText_.lines = ['Owww, fuck, what hit us?'];
   }
 
   show() {
     super.show();
 
+    this.introText_.play(0);
     setTimeout(() => {
       this.start_ = Date.now();
       this.interval_ = window.setInterval(() => {
