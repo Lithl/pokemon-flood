@@ -85,11 +85,13 @@ export class IntroSequence extends FloodScreen {
     if (source === this.genderSelector_) {
       const isMale = e.detail.value === 'male';
       source.hide();
-      if (isMale) {
-        this.maleNameSelector_.show();
-      } else {
-        this.femaleNameSelector_.show();
-      }
+      setTimeout(() => {
+        if (isMale) {
+          this.maleNameSelector_.show();
+        } else {
+          this.femaleNameSelector_.show();
+        }
+      });
     } else {
       this.maleNameSelector_.hide();
       this.femaleNameSelector_.hide();
