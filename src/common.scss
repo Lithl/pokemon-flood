@@ -22,7 +22,12 @@
     -1px -1px 0 $color;
 }
 
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
 $backgroundColor: #4f4fdc;
+$blink: blink 1s steps(5, start) infinite;
 $borderColorSelected: #338;
 $borderRadius: 4px;
 $borderWidth: 6px;

@@ -40,7 +40,7 @@
     position: absolute;
     bottom: 0;
     right: $whitespaceDistance;
-    animation: blink 1s steps(5, start) infinite;
+    animation: $blink;
     display: none;
   }
 
@@ -53,6 +53,4 @@
   }
 }
 
-@keyframes blink {
-  to { visibility: hidden; }
-}
+
