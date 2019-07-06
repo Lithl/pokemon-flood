@@ -13,8 +13,8 @@ export function MenuBehavior<T extends Constructor<PolymerElement>>
     protected isShowing_ = false;
     protected ignoreKeys_ = false;
     protected menuItems_: Optional<PaperItemElement>[] = [];
-    private numItems_: number;
-    private initial_: number;
+    protected numItems_: number;
+    protected initial_: number;
 
     constructor(...args: any[]) {
       super();
