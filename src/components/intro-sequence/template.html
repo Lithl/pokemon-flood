@@ -16,4 +16,29 @@
   <img src="/images/oak-pain.png">
   <div id="opening-eyes"></div>
   <dialogue-box id="intro-text"></dialogue-box>
+  <name-selector
+      id="gender-selector"
+      selector-name="Select gender"
+      on-item-selected="handleItemSelected_">
+    <paper-item value="male">Male</paper-item>
+    <paper-item value="female">Female</paper-item>
+  </name-selector>
+  <name-selector
+      id="male-name-selector"
+      selector-name="Select name"
+      on-item-selected="handleItemSelected_">
+    <paper-item value="Samson">Samson</paper-item>
+    <paper-item value="Bedan">Bedan</paper-item>
+    <paper-item value="Ambrose">Ambrose</paper-item>
+    <paper-item value="custom"><em>Custom name...</em></paper-item>
+  </name-selector>
+  <name-selector
+      id="female-name-selector"
+      selector-name="Select name"
+      on-item-selected="handleItemSelected_">
+    <paper-item value="Delilah">Delilah</paper-item>
+    <paper-item value="Micah">Micah</paper-item>
+    <paper-item value="Herodias">Herodias</paper-item>
+    <paper-item value="custom"><em>Custom name...</em></paper-item>
+  </name-selector>
 </div>

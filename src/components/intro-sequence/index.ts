@@ -1,8 +1,11 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { customElement, query } from '@polymer/decorators';
 import { FloodScreen } from '../flood-screens';
-import { SpriteSheet } from '../sprite-sheet';
+import { SpriteSheet, Sprite } from '../sprite-sheet';
 import { DialogueBox } from '../dialogue-box';
+import '@polymer/paper-listbox/paper-listbox';
+import '@polymer/paper-item/paper-item';
+import { NameSelector } from './name-selector';
 
 import { default as template } from './template.html';
 import { lerpPct, clamp } from '../../util';
@@ -25,6 +28,9 @@ export class IntroSequence extends FloodScreen {
   @query('#oak-dialogue') private oakDialogue_!: SpriteSheet;
   @query('#opening-eyes') private openEyes_!: HTMLDivElement;
   @query('#intro-text') private introText_!: DialogueBox;
+  @query('#gender-selector') private genderSelector_!: NameSelector;
+  @query('#male-name-selector') private maleNameSelector_!: NameSelector;
+  @query('#female-name-selector') private femaleNameSelector_!: NameSelector;
   private start_ = 0;
   private interval_ = 0;
 
@@ -38,7 +44,21 @@ export class IntroSequence extends FloodScreen {
 
     const eyesOpen = this.oakDialogue_.createSprite('closed');
     this.introText_.setAvatar(eyesOpen);
-    this.introText_.lines = ['Owww, fuck, what hit us?'];
+    this.introText_.lines = [
+      {
+        text: 'Owww, fuck, what hit us?',
+        onConfirm: (avatar?: Sprite) => {
+          if (avatar) avatar.swapTo('open');
+          this.introText_.play(1);
+        },
+      },
+      {
+        text: 'Wait, who are you?',
+        onComplete: () => {
+          this.genderSelector_.show();
+        },
+      },
+    ];
   }
 
   show() {
@@ -58,6 +78,27 @@ export class IntroSequence extends FloodScreen {
         }
       }, 50);
     }, 2000);
+  }
+
+  protected handleItemSelected_(e: CustomEvent) {
+    const source = e.composedPath()[0] as NameSelector;
+    if (source === this.genderSelector_) {
+      const isMale = e.detail.value === 'male';
+      source.hide();
+      if (isMale) {
+        this.maleNameSelector_.show();
+      } else {
+        this.femaleNameSelector_.show();
+      }
+    } else {
+      this.maleNameSelector_.hide();
+      this.femaleNameSelector_.hide();
+      if (e.detail.value === 'custom') {
+        // show name entry screen
+      } else {
+        // name := e.detail.value
+      }
+    }
   }
 
   private computePctOpen_() {
