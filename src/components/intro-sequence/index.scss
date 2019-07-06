@@ -32,7 +32,6 @@
 #female-name-selector {
   width: 0;
   height: 0;
-  overflow: hidden;
   transition: width 1s, height 1s, opacity .4s !important;
   background: none;
 
@@ -63,9 +62,14 @@
   padding: $whitespaceDistance;
   margin: $whitespaceDistance;
   background: $lightBackgroundColor;
+  overflow: hidden;
 
   --paper-item-disabled-color: black;
   --paper-item-selected-weight: normal;
+
+  --paper-item: {
+    white-space: nowrap;
+  }
 
   --paper-item-focused-before: {
     background: none;
